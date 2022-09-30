@@ -1,0 +1,84 @@
+object FrmEnviar: TFrmEnviar
+  Left = 0
+  Top = 0
+  Caption = 'Enviar Arquivo'
+  ClientHeight = 60
+  ClientWidth = 635
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  Position = poScreenCenter
+  OnClose = FormClose
+  OnCreate = FormCreate
+  PixelsPerInch = 96
+  TextHeight = 13
+  object Gauge1: TGauge
+    AlignWithMargins = True
+    Left = 3
+    Top = 52
+    Width = 629
+    Height = 5
+    Align = alBottom
+    BorderStyle = bsNone
+    ForeColor = clGreen
+    Progress = 0
+    ShowText = False
+    ExplicitTop = 108
+  end
+  object LblCaminho: TLabel
+    Left = 3
+    Top = 5
+    Width = 15
+    Height = 13
+    Caption = 'C:\'
+  end
+  object LblInfo: TLabel
+    AlignWithMargins = True
+    Left = 3
+    Top = 33
+    Width = 87
+    Height = 13
+    Caption = '(%) Enviado : 0%'
+  end
+  object LblTempo: TLabel
+    Left = 566
+    Top = 33
+    Width = 66
+    Height = 13
+    Caption = '00:00:00.000'
+  end
+  object LblEnviados: TLabel
+    Left = 224
+    Top = 33
+    Width = 72
+    Height = 13
+    Caption = 'Enviados: 0 / 0'
+  end
+  object BtnEnviar: TButton
+    Left = 503
+    Top = 5
+    Width = 129
+    Height = 25
+    Caption = 'Enviar'
+    TabOrder = 0
+    OnClick = BtnEnviarClick
+  end
+  object OD: TOpenDialog
+    DefaultExt = 'txt'
+    Filter = 'Texto|*.txt'
+    InitialDir = 'C:\Rest\Cliente\Arquivos'
+    Options = [ofReadOnly, ofHideReadOnly, ofEnableSizing]
+    Left = 520
+    Top = 8
+  end
+  object Timer: TTimer
+    Enabled = False
+    OnTimer = TimerTimer
+    Left = 488
+    Top = 8
+  end
+end

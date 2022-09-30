@@ -1,0 +1,19 @@
+program Cliente;
+
+uses
+  Vcl.Forms,
+  uPrincipal in 'View\uPrincipal.pas' {FrmPrincipal},
+  uPessoa in 'View\uPessoa.pas' {FrmPessoa},
+  uModel.Interfaces in 'Model\uModel.Interfaces.pas',
+  uModel.Pessoa in 'Model\uModel.Pessoa.pas',
+  uController.Interfaces in 'Controller\uController.Interfaces.pas',
+  uController in 'Controller\uController.pas';
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.MainFormOnTaskbar := True;
+  Application.CreateForm(TFrmPessoa, FrmPessoa);
+  Application.Run;
+end.

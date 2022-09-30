@@ -1,0 +1,167 @@
+unit uPessoa;
+
+interface
+
+uses
+  Winapi.Windows,
+  Winapi.Messages,
+  System.SysUtils,
+  System.Variants,
+  System.Classes,
+  Vcl.Graphics,
+  Vcl.Controls,
+  Vcl.Forms,
+  Vcl.Dialogs,
+  Vcl.ComCtrls,
+  Vcl.StdCtrls,
+  Vcl.Buttons,
+  Vcl.ExtCtrls,
+  uController.Interfaces;
+
+type
+  TPOperacao = (tpInsert, tpEdit);
+
+  TFrmPessoa = class(TForm)
+    PC: TPageControl;
+    TSLista: TTabSheet;
+    TSDados: TTabSheet;
+    PnMenu: TPanel;
+    BtnAdicionar: TBitBtn;
+    BtnExcluir: TBitBtn;
+    BtnFechar: TBitBtn;
+    GBPesquisar: TGroupBox;
+    PnDados: TPanel;
+    EdtPesquisar: TEdit;
+    LblNome: TLabel;
+    EdtNome: TEdit;
+    LblSobrenome: TLabel;
+    EdtSobrenome: TEdit;
+    LblNatureza: TLabel;
+    EdtNatureza: TEdit;
+    LblDocumento: TLabel;
+    EdtDocumento: TEdit;
+    Panel1: TPanel;
+    BtnCancelar: TBitBtn;
+    BtnSalvar: TBitBtn;
+    LV: TListView;
+    DTP: TDateTimePicker;
+    Label1: TLabel;
+    procedure BtnAdicionarClick(Sender: TObject);
+    procedure BtnFecharClick(Sender: TObject);
+    procedure BtnSalvarClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure LVDblClick(Sender: TObject);
+    procedure BtnCancelarClick(Sender: TObject);
+  private
+    { Private declarations }
+    Controller: iController;
+    op: TPOperacao;
+
+    Procedure ListaTodos;
+    procedure LimpaCampos;
+  public
+    { Public declarations }
+  end;
+
+var
+  FrmPessoa: TFrmPessoa;
+
+implementation
+
+uses
+  uController;
+
+{$R *.dfm}
+
+
+procedure TFrmPessoa.BtnSalvarClick(Sender: TObject);
+begin
+
+  case op of
+    tpInsert: begin
+      if Controller.Pessoa
+          .NMPRIMEIRO (EdtNome.Text)
+          .NMSEGUNDO  (EdtSobrenome.Text)
+          .NATUREZA   (StrToInt(EdtNatureza.Text))
+          .DOCUMENTO  (EdtDocumento.Text)
+          .DTREGISTRO (DTP.DateTime)
+          .Insert then begin
+            pc.ActivePage := TSLista;
+            ListaTodos;
+          end else begin
+            ShowMessage('Erro em salvar pessoa');
+          end;
+    end;
+
+    tpEdit: begin
+      ShowMessage('edit');
+    end;
+  end;
+end;
+
+procedure TFrmPessoa.BtnAdicionarClick(Sender: TObject);
+begin
+  op := tpInsert;
+  pc.ActivePage := TSDados;
+  LimpaCampos;
+end;
+
+procedure TFrmPessoa.BtnCancelarClick(Sender: TObject);
+begin
+  pc.ActivePage := TSLista;
+end;
+
+procedure TFrmPessoa.BtnFecharClick(Sender: TObject);
+begin
+  Close;
+end;
+
+procedure TFrmPessoa.FormCreate(Sender: TObject);
+begin
+  Controller := TController.New;
+  pc.ActivePage := TSLista;
+  ListaTodos
+end;
+
+procedure TFrmPessoa.LimpaCampos;
+begin
+  EdtNome.Clear;
+  EdtSobrenome.Clear;
+  EdtNatureza.Clear;
+  EdtDocumento.Clear;
+  DTP.DateTime := Now;
+end;
+
+procedure TFrmPessoa.ListaTodos;
+var
+  i: integer;
+  item: TListItem;
+begin
+  LV.Clear;
+  with Controller.Pessoa.List do begin
+    for i := 0 to Count -1 do begin
+      item := LV.Items.Add;
+      item.Caption := IntToStr(Items[i].ID);
+      item.SubItems.Add(Items[i].NMPRIMEIRO);
+      item.SubItems.Add(Items[i].NMSEGUNDO);
+    end;
+
+  end;
+end;
+
+procedure TFrmPessoa.LVDblClick(Sender: TObject);
+begin
+  op := tpEdit;
+
+  pc.ActivePage := TSDados;
+  with Controller.Pessoa.List(LV.ItemFocused.Caption) do begin;
+    EdtNome.Text        := Items[0].NMPRIMEIRO;
+    EdtSobrenome.Text   := Items[0].NMSEGUNDO;
+    EdtNatureza.Text    := IntToStr(Items[0].NATUREZA);
+    EdtDocumento.Text   := Items[0].DOCUMENTO;
+    DTP.DateTime        := Items[0].DTREGISTRO;
+  end;
+
+end;
+
+end.

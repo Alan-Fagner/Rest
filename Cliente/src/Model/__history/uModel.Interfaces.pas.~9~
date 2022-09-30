@@ -1,0 +1,33 @@
+unit uModel.Interfaces;
+
+interface
+
+uses
+  System.Classes,
+  System.Generics.Collections;
+
+type
+
+  iPessoa = interface
+    ['{04CFF5CD-E14D-4223-8CB2-90D85C213445}']
+
+    function List(ID: string) : TList<iPessoa>;
+
+    function ID (Value: Integer) : iPessoa; overload;
+    Function ID : Integer; overload;
+    function NATUREZA (Value: Integer) : iPessoa; overload;
+    Function NATUREZA : Integer; overload;
+    function DOCUMENTO (Value: string) : iPessoa; overload;
+    Function DOCUMENTO : string; overload;
+    Function NMPRIMEIRO (Value: string) : iPessoa; overload;
+    Function NMPRIMEIRO : string; overload;
+    Function NMSEGUNDO (Value: string) : iPessoa; overload;
+    Function NMSEGUNDO : string; overload;
+    Function DTREGISTRO (Value: TDateTime) : iPessoa; overload;
+    Function DTREGISTRO : TDateTime; overload;
+  end;
+
+implementation
+
+
+end.

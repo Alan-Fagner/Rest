@@ -1,0 +1,46 @@
+unit uPessoa;
+
+interface
+
+uses
+  Winapi.Windows,
+  Winapi.Messages,
+  System.SysUtils,
+  System.Variants,
+  System.Classes,
+  Vcl.Graphics,
+  Vcl.Controls,
+  Vcl.Forms,
+  Vcl.Dialogs,
+  Vcl.ComCtrls,
+  Vcl.StdCtrls,
+  Vcl.Buttons,
+  Vcl.ExtCtrls,
+  uController.Interfaces;
+
+type
+  TPOperacao = (tpInsert, tpEdit);
+
+  TFrmPessoa = class(TForm)
+
+  private
+    { Private declarations }
+    Controller: iController;
+  public
+    { Public declarations }
+  end;
+
+var
+  FrmPessoa: TFrmPessoa;
+
+implementation
+
+uses
+  uController;
+
+{$R *.dfm}
+
+
+
+
+end.

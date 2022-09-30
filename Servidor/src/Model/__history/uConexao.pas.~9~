@@ -1,0 +1,148 @@
+unit uConexao;
+
+interface
+
+uses
+  uModel.Interfaces,
+  FireDAC.Stan.Intf,
+  FireDAC.Stan.Option,
+  FireDAC.Stan.Error,
+  FireDAC.Stan.Def,
+  FireDAC.Stan.Pool,
+  FireDAC.Stan.Async,
+  FireDAC.Stan.Param,
+  FireDAC.Stan.StorageBin,
+  FireDAC.Phys,
+  FireDAC.Phys.Intf,
+  FireDAC.Phys.FB,
+  FireDAC.Phys.FBDef,
+  FireDAC.Phys.IBBase,
+  FireDAC.Comp.DataSet,
+  FireDAC.Comp.Client,
+  FireDAC.Comp.UI,
+  FireDAC.DApt,
+  FireDAC.DApt.Intf,
+  FireDAC.DatS,
+  FireDAC.UI.Intf,
+  FireDAC.VCLUI.Wait;
+
+type
+
+  TConexao = class(TInterfacedObject, iConexao)
+  private
+    Conexao     : TFDConnection;
+    Cursor      : TFDGUIxWaitCursor;
+    DriverLink  : TFDPhysFBDriverLink;
+    Storage     : TFDStanStorageBinLink;
+    procedure onBeforeConnect(Sender: TObject);
+
+  public
+    constructor Create;
+    destructor Destroy; override;
+    class function New : iConexao;
+
+    function Connection : TFDConnection;
+    function StartTransaction: iConexao;
+    function inTransaction: Boolean;
+    function Commit : iConexao;
+    function Rollback : iConexao;
+    Function Qry: TFDQuery;
+
+  end;
+
+implementation
+
+uses
+  System.SysUtils;
+
+{ TConexao }
+
+function TConexao.Commit: iConexao;
+begin
+  Result := Self;
+
+  if Conexao.InTransaction then
+    Conexao.Commit;
+end;
+
+function TConexao.Connection: TFDConnection;
+begin
+  Result := Conexao;
+end;
+
+constructor TConexao.Create;
+begin
+  Conexao     := TFDConnection.Create(nil);
+  Cursor      := TFDGUIxWaitCursor.Create(nil);
+  DriverLink  := TFDPhysFBDriverLink.Create(nil);
+  Storage     := TFDStanStorageBinLink.Create(nil);
+
+  Conexao.BeforeConnect := onBeforeConnect;
+  Conexao.Connected := True;
+end;
+
+destructor TConexao.Destroy;
+begin
+  Conexao.Connected := False;
+
+  freeandnil(Storage);
+  freeandnil(DriverLink);
+  freeandnil(Cursor);
+  freeandnil(Conexao);
+  inherited;
+end;
+
+function TConexao.inTransaction: Boolean;
+begin
+  Result := Conexao.InTransaction;
+end;
+
+class function TConexao.New: iConexao;
+begin
+  Result:= Self.Create;
+end;
+
+procedure TConexao.onBeforeConnect(Sender: TObject);
+begin
+  with Conexao.Params do begin
+    DriverID                    := 'PG';
+    Database                    := 'WK';
+    UserName                    := 'postgres';
+    Password                    := 'postgres';
+    Values['Server']            := '<LOCAL>';
+    Values['Port']              := '5432';
+    Values['ExtendedMetadata']  :='false';
+    Values['OldAsBlob']         := 'Choose';
+    Values['UnknowFormat']      := 'Error';
+    Values['ArrayScanSample']   := '0;5';
+    Values['MetaDefSchema']     := 'public';
+  end;
+
+  DriverLink.VendorHome := 'C:\Rest\Servidor';
+end;
+
+function TConexao.Qry: TFDQuery;
+begin
+  Result := TFDQuery.Create(nil);
+  Result.Connection := Conexao;
+end;
+
+function TConexao.Rollback: iConexao;
+begin
+  Result := Self;
+
+  if Conexao.InTransaction then
+    Conexao.Rollback;
+end;
+
+function TConexao.StartTransaction: iConexao;
+begin
+  Result := Self;
+
+  Conexao.Connected := False;
+  Conexao.Connected := True;
+
+  Conexao.StartTransaction;
+end;
+
+end.

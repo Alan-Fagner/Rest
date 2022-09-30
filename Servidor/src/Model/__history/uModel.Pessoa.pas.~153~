@@ -1,0 +1,302 @@
+unit uModel.Pessoa;
+
+interface
+
+uses
+  Data.DB,
+  System.Classes,
+  System.JSON,
+  FireDAC.Stan.Param,
+  uModel.Interfaces,
+  uDM,
+  uCEP,
+  uThreadInsert,
+  uThreadUpdate;
+
+type
+  TModelPessoa = class(TInterfacedObject, iPessoa)
+  private
+    Dados: TDM;
+    ThIns : TThInsert;
+    ThUpd : TThUpdate;
+
+    FID         : Integer;
+    FNatureza   : Integer;
+    FDocumento  : string;
+    FPrimeiro   : String;
+    FSegundo    : String;
+    FDtRegistro : TDateTime;
+    FCep        : string;
+    FEndereco   : string;
+    FComlemento : string;
+    FBairro     : string;
+    FCidade     : string;
+    FUF         : string;
+
+  public
+    constructor Create;
+    destructor Destroy; override;
+    class function New : iPessoa;
+
+    function List(ID: string): TJSONArray;
+    function Insert(Pessoa: TJSONObject):TJSONObject;
+    function Update(Pessoa: TJSONObject):TJSONObject;
+    function Delete(ID: string): TJSONObject;
+
+    function ID(Value: Integer) : iPessoa; overload;
+    Function ID:Integer; overload;
+    function NATUREZA(Value: Integer) : iPessoa; overload;
+    Function NATUREZA:Integer; overload;
+    function DOCUMENTO(Value: string) : iPessoa; overload;
+    Function DOCUMENTO:string; overload;
+    Function NMPRIMEIRO(Value: string) : iPessoa; overload;
+    Function NMPRIMEIRO:string; overload;
+    Function NMSEGUNDO(Value: string) : iPessoa; overload;
+    Function NMSEGUNDO:string; overload;
+    Function DTREGISTRO(Value: TDateTime) : iPessoa; overload;
+    Function DTREGISTRO:TDateTime; overload;
+    function CEP(Value: string) : iPessoa; overload;
+    Function CEP:string; overload;
+    function ENDERECO(Value: string) : iPessoa; overload;
+    Function ENDERECO:string; overload;
+    function COMPLEMENTO(Value: string) : iPessoa; overload;
+    Function COMPLEMENTO:string; overload;
+    function BAIRRO(Value: string) : iPessoa; overload;
+    Function BAIRRO:string; overload;
+    function CIDADE(Value: string) : iPessoa; overload;
+    Function CIDADE:string; overload;
+    function UF(Value: string) : iPessoa; overload;
+    Function UF:string; overload;
+
+  end;
+
+implementation
+
+uses
+  System.SysUtils;
+
+{ TModelPessoa }
+
+function TModelPessoa.BAIRRO(Value: string): iPessoa;
+begin
+  Result := Self;
+  FBairro := Value;
+end;
+
+function TModelPessoa.BAIRRO: string;
+begin
+  Result := FBairro;
+end;
+
+function TModelPessoa.CEP: string;
+begin
+  Result := FCep;
+end;
+
+function TModelPessoa.CEP(Value: string): iPessoa;
+begin
+  Result := Self;
+  FCep := Value;
+end;
+
+function TModelPessoa.CIDADE: string;
+begin
+  Result := FCidade;
+end;
+
+function TModelPessoa.CIDADE(Value: string): iPessoa;
+begin
+  Result := Self;
+  FCidade := Value;
+end;
+
+function TModelPessoa.COMPLEMENTO(Value: string): iPessoa;
+begin
+  Result := Self;
+  FComlemento := Value;
+end;
+
+function TModelPessoa.COMPLEMENTO: string;
+begin
+  Result := FComlemento;
+end;
+
+constructor TModelPessoa.Create;
+begin
+  Dados := TDM.Create(nil);
+end;
+
+destructor TModelPessoa.Destroy;
+begin
+  FreeAndNil(Dados);
+  inherited;
+end;
+
+function TModelPessoa.List(ID: string): TJSONArray;
+var
+  SQL: TStringList;
+  JO: TJSONObject;
+begin
+  SQL := TStringList.Create;
+  Result := TJSONArray.Create;
+  try
+    try
+      with Dados do begin
+
+        SQL.Add('SELECT * FROM public.pessoa ps '+
+                'LEFT JOIN public.endereco en ON en.idpessoa = ps.idpessoa '+
+                'LEFT JOIN public.endereco_integracao ei ON en.idendereco = ei.idendereco');
+
+        if ID <> '' then begin
+          SQL.Add(' Where ps.idpessoa = '+ID);
+        end;
+
+        SQL.Add(' ORDER BY ps.idpessoa ASC');
+
+        Dados.Qry.SQL.Clear;
+        Dados.Qry.SQL.Add(SQL.Text);
+        Dados.Qry.Open;
+
+        if not Qry.IsEmpty then begin
+          while not Qry.Eof do begin
+            JO := TJSONObject.Create;
+            JO.AddPair('ID',IntToStr(Qry.FieldByName('idpessoa').AsInteger));
+            JO.AddPair('NATUREZA',IntToStr(Qry.FieldByName('flnatureza').AsInteger));
+            JO.AddPair('DOCUMENTO',Qry.FieldByName('dsdocumento').AsString);
+            JO.AddPair('NMPRIMEIRO',Qry.FieldByName('nmprimeiro').AsString);
+            JO.AddPair('NMSEGUNDO',Qry.FieldByName('nmsegundo').AsString);
+            JO.AddPair('DTREGISTRO',DateToStr(Qry.FieldByName('dtregistro').AsDateTime));
+            JO.AddPair('CEP',Qry.FieldByName('dscep').AsString);
+            JO.AddPair('ENDERECO',Qry.FieldByName('nmlogradouro').AsString);
+            JO.AddPair('COMPLEMENTO',Qry.FieldByName('dscomplemento').AsString);
+            JO.AddPair('BAIRRO',Qry.FieldByName('nmbairro').AsString);
+            JO.AddPair('CIDADE',Qry.FieldByName('nmcidade').AsString);
+            JO.AddPair('UF',Qry.FieldByName('dsuf').AsString);
+
+            Result.AddElement(JO);
+            Qry.Next;
+          end;
+        end;
+      end;
+
+    except on E: Exception do
+      Result := TJSONArray.Create('Erro', e.Message);
+    end;
+
+  finally
+    FreeAndNil(SQL);
+  end;
+end;
+
+function TModelPessoa.Insert(Pessoa: TJSONObject): TJSONObject;
+begin
+  ThIns := TThInsert.Create(Pessoa);
+  Result:= TJSONObject.Create.AddPair('Result','200');
+end;
+
+function TModelPessoa.UF(Value: string): iPessoa;
+begin
+  Result := Self;
+  FUF := Value;
+end;
+
+function TModelPessoa.UF: string;
+begin
+  Result := FUF;
+end;
+
+function TModelPessoa.Update(Pessoa: TJSONObject): TJSONObject;
+begin
+  ThIns := TThUpdate.Create(Pessoa);
+  Result:= TJSONObject.Create.AddPair('Result','200');
+end;
+
+function TModelPessoa.Delete(ID: string): TJSONObject;
+begin
+  Result:= TJSONObject.Create.AddPair('Result','200');
+end;
+
+function TModelPessoa.DOCUMENTO: string;
+begin
+  Result := FDocumento;
+end;
+
+function TModelPessoa.DOCUMENTO(Value: string): iPessoa;
+begin
+  Result := Self;
+  FDocumento := Value;
+end;
+
+function TModelPessoa.DTREGISTRO: TDateTime;
+begin
+  Result := FDtRegistro;
+end;
+
+function TModelPessoa.ENDERECO: string;
+begin
+  Result := FEndereco;
+end;
+
+function TModelPessoa.ENDERECO(Value: string): iPessoa;
+begin
+  Result := Self;
+  FEndereco := Value;
+end;
+
+function TModelPessoa.DTREGISTRO(Value: TDateTime): iPessoa;
+begin
+  Result := Self;
+  FDtRegistro := Value;
+end;
+
+function TModelPessoa.ID: Integer;
+begin
+  Result := FID;
+end;
+
+function TModelPessoa.ID(Value: Integer): iPessoa;
+begin
+  Result := Self;
+  FID := Value;
+end;
+
+function TModelPessoa.NATUREZA: Integer;
+begin
+  Result := FNatureza
+end;
+
+function TModelPessoa.NATUREZA(Value: Integer): iPessoa;
+begin
+  Result := Self;
+  FNatureza := Value;
+end;
+
+class function TModelPessoa.New: iPessoa;
+begin
+  Result:= Self.Create;
+end;
+
+function TModelPessoa.NMPRIMEIRO(Value: string): iPessoa;
+begin
+  Result := Self;
+  FPrimeiro := Value;
+end;
+
+function TModelPessoa.NMPRIMEIRO: string;
+begin
+  Result := FPrimeiro;
+end;
+
+function TModelPessoa.NMSEGUNDO(Value: string): iPessoa;
+begin
+  Result := Self;
+  FSegundo := Value;
+end;
+
+function TModelPessoa.NMSEGUNDO: string;
+begin
+  Result := FSegundo;
+end;
+
+
+end.

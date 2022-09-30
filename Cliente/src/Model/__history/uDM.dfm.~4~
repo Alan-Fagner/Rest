@@ -1,0 +1,108 @@
+object DM: TDM
+  Height = 480
+  Width = 640
+  object Client: TRESTClient
+    Accept = 'application/json, text/plain; q=0.9, text/html;q=0.8,'
+    AcceptCharset = 'utf-8, *;q=0.8'
+    BaseURL = 'http://localhost:8085/api/rest'
+    ContentType = 'apllication/json'
+    Params = <>
+    SynchronizedEvents = False
+    Left = 48
+    Top = 64
+  end
+  object Request: TRESTRequest
+    AssignedValues = [rvConnectTimeout, rvReadTimeout]
+    Client = Client
+    Params = <>
+    Resource = 'pessoa'
+    Response = Response
+    SynchronizedEvents = False
+    Left = 48
+    Top = 136
+  end
+  object Response: TRESTResponse
+    ContentType = 'application/json'
+    Left = 48
+    Top = 208
+  end
+  object RESTResponseDataSetAdapter1: TRESTResponseDataSetAdapter
+    Active = True
+    Dataset = FDMemTable1
+    FieldDefs = <>
+    Response = Response
+    Left = 208
+    Top = 184
+  end
+  object FDMemTable1: TFDMemTable
+    Active = True
+    FieldDefs = <
+      item
+        Name = 'ID'
+        DataType = ftWideString
+        Size = 255
+      end
+      item
+        Name = 'NATUREZA'
+        DataType = ftWideString
+        Size = 255
+      end
+      item
+        Name = 'DOCUMENTO'
+        DataType = ftWideString
+        Size = 255
+      end
+      item
+        Name = 'NMPRIMEIRO'
+        DataType = ftWideString
+        Size = 255
+      end
+      item
+        Name = 'NMSEGUNDO'
+        DataType = ftWideString
+        Size = 255
+      end
+      item
+        Name = 'DTREGISTRO'
+        DataType = ftWideString
+        Size = 255
+      end>
+    IndexDefs = <>
+    FetchOptions.AssignedValues = [evMode]
+    FetchOptions.Mode = fmAll
+    ResourceOptions.AssignedValues = [rvSilentMode]
+    ResourceOptions.SilentMode = True
+    UpdateOptions.AssignedValues = [uvUpdateChngFields, uvUpdateMode, uvLockMode, uvLockPoint, uvLockWait, uvRefreshMode, uvFetchGeneratorsPoint, uvCheckRequired, uvCheckReadOnly, uvCheckUpdatable, uvAutoCommitUpdates]
+    UpdateOptions.LockWait = True
+    UpdateOptions.FetchGeneratorsPoint = gpNone
+    UpdateOptions.CheckRequired = False
+    UpdateOptions.AutoCommitUpdates = True
+    StoreDefs = True
+    Left = 400
+    Top = 256
+    object FDMemTable1ID: TWideStringField
+      FieldName = 'ID'
+      Size = 255
+    end
+    object FDMemTable1NATUREZA: TWideStringField
+      FieldName = 'NATUREZA'
+      Size = 255
+    end
+    object FDMemTable1DOCUMENTO: TWideStringField
+      FieldName = 'DOCUMENTO'
+      Size = 255
+    end
+    object FDMemTable1NMPRIMEIRO: TWideStringField
+      FieldName = 'NMPRIMEIRO'
+      Size = 255
+    end
+    object FDMemTable1NMSEGUNDO: TWideStringField
+      FieldName = 'NMSEGUNDO'
+      Size = 255
+    end
+    object FDMemTable1DTREGISTRO: TWideStringField
+      FieldName = 'DTREGISTRO'
+      Size = 255
+    end
+  end
+end

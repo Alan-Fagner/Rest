@@ -1,0 +1,60 @@
+unit Model.Pessoa;
+
+interface
+
+uses
+  Model.Interfaces;
+
+type
+
+  TModelPessoa = class(TInterfacedObject, iPessoa)
+  private
+
+    FID : Integer;
+    FNatureza : Integer;
+    FDocumento : string;
+    FPrimeiro : String;
+    FSegundo : String;
+    FDtRegistro : TDateTime;
+
+  public
+    constructor Create;
+    destructor Destroy; override;
+    class function New : iPessoa;
+
+    function ID (Value: Integer) : iPessoa; overload;
+    Function ID : Integer; overload;
+    function NATUREZA (Value: Integer) : iPessoa; overload;
+    Function NATUREZA : Integer; overload;
+    function DOCUMENTO (Value: string) : iPessoa; overload;
+    Function DOCUMENTO : string; overload;
+    Function NMPRIMEIRO (Value: string) : iPessoa; overload;
+    Function NMPRIMEIRO : string; overload;
+    Function NMSEGUNDO (Value: string) : iPessoa; overload;
+    Function NMSEGUNDO : string; overload;
+    Function DTREGISTRO (Value: TDateTime) : iPessoa; overload;
+    Function DTREGISTRO : TDateTime; overload;
+
+  end;
+
+implementation
+
+{ TModelPessoa }
+
+constructor TModelPessoa.Create;
+begin
+
+end;
+
+destructor TModelPessoa.Destroy;
+begin
+
+  inherited;
+end;
+
+class function TModelPessoa.New: iPessoa;
+begin
+  Result:= Self.Create;
+end;
+
+end.

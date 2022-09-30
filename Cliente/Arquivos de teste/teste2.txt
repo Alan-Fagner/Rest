@@ -1,0 +1,4 @@
+Natureza;Documento;Nome;Sobrenome;Data;CEP
+1;000.000.000-00;Teste1;Teste1;19/09/2022;13.xx8-060
+2;000.000.000-00;Teste2;Teste2;19/09/2022;36.0aa37-790
+3;000.000.000-00;Teste3;Teste3;19/09/2022;36.090-040

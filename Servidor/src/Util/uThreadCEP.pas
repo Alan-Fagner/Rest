@@ -1,0 +1,335 @@
+unit uThreadCEP;
+
+interface
+
+uses
+  System.SysUtils,
+  System.Classes,
+  System.JSON,
+  idHTTP,
+  IdSSLOpenSSL;
+
+type
+  TThreadCEP = class
+  private
+    Fcep: string;
+    FLogradouro: string;
+    Fcomplemento :string;
+    Fbairro :string;
+    Flocalidade :string;
+    Fuf :string;
+    Fibge :string;
+    Fgia :string;
+    Fddd :string;
+    Fsiafi :string;
+
+  public
+    constructor Create;
+    destructor Destroy; override;
+
+    Function Consulta(vCEP: string): TThreadCEP;
+    Procedure ConsultaCEP(vCEP: string);
+
+    Function CEP (Value: string) : TThreadCEP; overload;
+    Function CEP : string; overload;
+    Function LOGRADOURO (Value: string) : TThreadCEP; overload;
+    Function LOGRADOURO : string; overload;
+    Function COMPLEMENTO (Value: string) : TThreadCEP; overload;
+    Function COMPLEMENTO : string; overload;
+    Function BAIRRO (Value: string) : TThreadCEP; overload;
+    Function BAIRRO : string; overload;
+    Function LOCALIDADE (Value: string) : TThreadCEP; overload;
+    Function LOCALIDADE : string; overload;
+    Function UF (Value: string) : TThreadCEP; overload;
+    Function UF : string; overload;
+    Function IBGE (Value: string) : TThreadCEP; overload;
+    Function IBGE : string; overload;
+    Function GIA (Value: string) : TThreadCEP; overload;
+    Function GIA : string; overload;
+    Function DDD (Value: string) : TThreadCEP; overload;
+    Function DDD : string; overload;
+    Function SIAFI (Value: string) : TThreadCEP; overload;
+    Function SIAFI : string; overload;
+
+  end;
+
+implementation
+
+{ TThreadCEP }
+
+constructor TThreadCEP.Create;
+begin
+
+end;
+
+destructor TThreadCEP.Destroy;
+begin
+  inherited;
+end;
+
+function TThreadCEP.Consulta(vCEP: string): TThreadCEP;
+var
+  Obj : TJSONObject;
+  HTTP: TIdHTTP;
+  SSL : TIdSSLIOHandlerSocketOpenSSL;
+  Response: TStringStream;
+begin
+  HTTP := TIdHTTP.Create;
+  SSL := TIdSSLIOHandlerSocketOpenSSL.Create(HTTP);
+  Response := TStringStream.Create('');
+
+  HTTP.IOHandler := SSL;
+  HTTP.Request.ContentType := 'application/json';
+  SSL.SSLOptions.SSLVersions := [sslvTLSv1, sslvTLSv1_1, sslvTLSv1_2];
+  try
+    try
+      HTTP.Get('https://viacep.com.br/ws/' + vCEP + '/json', Response);
+      Response.Position := 0;
+
+      Obj := TJSONObject.ParseJSONValue(TEncoding.UTF8.GetBytes(Utf8ToAnsi(Response.DataString)), 0) as TJSONObject;
+
+      case HTTP.ResponseCode of
+        200: begin
+          if Obj.FindValue('erro') = nil then begin
+            Self.CEP         (Obj.GetValue('cep').Value);
+            Self.LOGRADOURO  (Obj.GetValue('logradouro').Value);
+            Self.COMPLEMENTO (Obj.GetValue('complemento').Value);
+            Self.BAIRRO      (Obj.GetValue('bairro').Value);
+            Self.LOCALIDADE  (Obj.GetValue('localidade').Value);
+            Self.UF          (Obj.GetValue('uf').value);
+            Self.IBGE        (Obj.GetValue('ibge').Value);
+            Self.GIA         (Obj.GetValue('gia').Value);
+            Self.DDD         (Obj.GetValue('ddd').Value);
+            Self.SIAFI       (Obj.GetValue('siafi').Value);
+          end else begin
+            Self.CEP         ('--');
+            Self.LOGRADOURO  ('--');
+            Self.COMPLEMENTO ('--');
+            Self.BAIRRO      ('--');
+            Self.LOCALIDADE  ('--');
+            Self.UF          ('--');
+            Self.IBGE        ('--');
+            Self.GIA         ('--');
+            Self.DDD         ('--');
+            Self.SIAFI       ('--');
+          end;
+
+        end;
+
+        400: begin
+          Self.CEP         ('--');
+          Self.LOGRADOURO  ('--');
+          Self.COMPLEMENTO ('--');
+          Self.BAIRRO      ('--');
+          Self.LOCALIDADE  ('--');
+          Self.UF          ('--');
+          Self.IBGE        ('--');
+          Self.GIA         ('--');
+          Self.DDD         ('--');
+          Self.SIAFI       ('--');
+        end;
+      end;
+
+      Result := Self;
+
+      except on E: Exception do begin
+        Self.CEP         ('--');
+        Self.LOGRADOURO  ('--');
+        Self.COMPLEMENTO ('--');
+        Self.BAIRRO      ('--');
+        Self.LOCALIDADE  ('--');
+        Self.UF          ('--');
+        Self.IBGE        ('--');
+        Self.GIA         ('--');
+        Self.DDD         ('--');
+        Self.SIAFI       ('--');
+        Result := Self;
+      end;
+    end;
+
+  finally
+    FreeAndNil(Obj);
+    Response.Destroy;
+    FreeAndNil(SSL);
+    FreeAndNil(HTTP);
+  end;
+end;
+
+procedure TThreadCEP.ConsultaCEP(vCEP: string);
+begin
+  TThread.CreateAnonymousThread(
+  procedure()
+  var
+    Obj : TJSONObject;
+    HTTP: TIdHTTP;
+    SSL : TIdSSLIOHandlerSocketOpenSSL;
+    Response: TStringStream;
+  begin
+    HTTP := TIdHTTP.Create;
+    SSL := TIdSSLIOHandlerSocketOpenSSL.Create(HTTP);
+    Response := TStringStream.Create('');
+
+    HTTP.IOHandler := SSL;
+    HTTP.Request.ContentType := 'application/json';
+    SSL.SSLOptions.SSLVersions := [sslvTLSv1, sslvTLSv1_1, sslvTLSv1_2];
+    try
+      try
+        HTTP.Get('https://viacep.com.br/ws/' + vCEP + '/json', Response);
+        Response.Position := 0;
+
+        Obj := TJSONObject.ParseJSONValue(TEncoding.UTF8.GetBytes(Utf8ToAnsi(Response.DataString)), 0) as TJSONObject;
+
+//          Fcep :=          Obj.GetValue('cep').Value;
+//          flogradouro:=    Obj.GetValue('logradouro').Value;
+//          Self.COMPLEMENTO (Obj.GetValue('complemento').Value);
+//          Self.BAIRRO      (Obj.GetValue('bairro').Value);
+//          Self.LOCALIDADE  (Obj.GetValue('localidade').Value);
+//          Self.UF          (Obj.GetValue('uf').value);
+//          Self.IBGE        (Obj.GetValue('ibge').Value);
+//          Self.GIA         (Obj.GetValue('gia').Value);
+//          Self.DDD         (Obj.GetValue('ddd').Value);
+//          Self.SIAFI       (Obj.GetValue('siafi').Value);
+
+        TThread.Synchronize(TThread.CurrentThread,
+        procedure
+        begin
+          Fcep :=          Obj.GetValue('cep').Value;
+          flogradouro:=    Obj.GetValue('logradouro').Value;
+        end);
+
+        except on E: Exception do begin
+          Self.CEP         ('--');
+          Self.LOGRADOURO  ('--');
+          Self.COMPLEMENTO ('--');
+          Self.BAIRRO      ('--');
+          Self.LOCALIDADE  ('--');
+          Self.UF          ('--');
+          Self.IBGE        ('--');
+          Self.GIA         ('--');
+          Self.DDD         ('--');
+          Self.SIAFI       ('--');
+        end;
+      end;
+
+    finally
+      FreeAndNil(Obj);
+      Response.Destroy;
+      FreeAndNil(SSL);
+      FreeAndNil(HTTP);
+    end;
+  end
+  ).Start;
+
+end;
+
+function TThreadCEP.BAIRRO: string;
+begin
+  Result := Fbairro;
+end;
+
+function TThreadCEP.BAIRRO(Value: string): TThreadCEP;
+begin
+  Result := Self;
+  Fbairro := Value;
+end;
+
+function TThreadCEP.CEP: string;
+begin
+  Result := Fcep
+end;
+
+function TThreadCEP.COMPLEMENTO: string;
+begin
+  Result := Fcomplemento;
+end;
+
+function TThreadCEP.COMPLEMENTO(Value: string): TThreadCEP;
+begin
+  Result := Self;
+  Fcomplemento := Value;
+end;
+
+function TThreadCEP.CEP(Value: string): TThreadCEP;
+begin
+  Result := Self;
+  Fcep := Value;
+end;
+
+function TThreadCEP.DDD: string;
+begin
+  Result := Fddd;
+end;
+
+function TThreadCEP.DDD(Value: string): TThreadCEP;
+begin
+  Result := Self;
+  Fddd := Value;
+end;
+
+function TThreadCEP.GIA: string;
+begin
+  Result := Fgia;
+end;
+
+function TThreadCEP.GIA(Value: string): TThreadCEP;
+begin
+  Result := Self;
+  Fgia := Value;
+end;
+
+function TThreadCEP.IBGE(Value: string): TThreadCEP;
+begin
+  Result := Self;
+  Fibge := Value;
+end;
+
+function TThreadCEP.IBGE: string;
+begin
+  Result := Fibge;
+end;
+
+function TThreadCEP.LOCALIDADE: string;
+begin
+  Result := Flocalidade;
+end;
+
+function TThreadCEP.LOCALIDADE(Value: string): TThreadCEP;
+begin
+  Result := Self;
+  Flocalidade := Value;
+end;
+
+function TThreadCEP.LOGRADOURO(Value: string): TThreadCEP;
+begin
+  Result := Self;
+  FLogradouro := Value;
+end;
+
+function TThreadCEP.LOGRADOURO: string;
+begin
+  Result := FLogradouro;
+end;
+
+function TThreadCEP.SIAFI(Value: string): TThreadCEP;
+begin
+  Result := Self;
+  Fsiafi := Value;
+end;
+
+function TThreadCEP.SIAFI: string;
+begin
+  Result := Fsiafi;
+end;
+
+function TThreadCEP.UF(Value: string): TThreadCEP;
+begin
+  Result := Self;
+  Fuf := Value;
+end;
+
+function TThreadCEP.UF: string;
+begin
+  Result := Fuf;
+end;
+
+end.

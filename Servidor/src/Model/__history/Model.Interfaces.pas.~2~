@@ -1,0 +1,11 @@
+unit Model.Interfaces;
+
+interface
+
+  iPessoa = interface
+    ['{87A8AFF6-E1FA-4C53-9594-EF6650ED62BF}']
+  end;
+
+implementation
+
+end.

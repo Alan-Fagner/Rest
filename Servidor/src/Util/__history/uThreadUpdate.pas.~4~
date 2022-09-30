@@ -1,0 +1,68 @@
+unit uThreadUpdate;
+
+interface
+
+uses
+  System.Classes,
+  System.JSON,
+  uCEP,
+  uDM;
+
+type
+
+  TMyClass = class(TThread)
+  private
+    vCEP  : TCEP;
+    Dados : TDM;
+    ID    : Integer;
+
+    FID         : integer;
+    FNatureza   : integer;
+    FDocumento  : string;
+    FNmPrimeiro : string;
+    FNmSegundo  : string;
+    FDtRegistro : TDateTime;
+    FCep        : string;
+
+  public
+    constructor Create(Pessoa: TJSONObject);
+    destructor Destroy; override;
+    procedure Execute; override;
+  end;
+
+implementation
+
+uses
+  System.SysUtils;
+
+{ TMyClass }
+
+constructor TMyClass.Create(Pessoa: TJSONObject);
+begin
+  inherited Create(False);
+  FreeOnTerminate := True;
+  Dados := TDM.Create(nil);
+  vCEP := TCEP.Create.Consulta(Pessoa.GetValue('CEP').Value);
+
+  FID         := StrToInt(Pessoa.GetValue('NATUREZA').Value);
+  FNatureza   := StrToInt(Pessoa.GetValue('NATUREZA').Value);
+  FDocumento  := Pessoa.GetValue('DOCUMENTO').Value;
+  FNmPrimeiro := Pessoa.GetValue('NMPRIMEIRO').Value;
+  FNmSegundo  := Pessoa.GetValue('NMSEGUNDO').Value;
+  FDtRegistro := StrToDate(Pessoa.GetValue('DTREGISTRO').Value);
+  FCep        := Pessoa.GetValue('CEP').Value;
+end;
+
+destructor TMyClass.Destroy;
+begin
+
+  inherited;
+end;
+
+procedure TMyClass.Execute;
+begin
+  inherited;
+
+end;
+
+end.

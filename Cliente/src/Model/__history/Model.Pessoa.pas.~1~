@@ -1,0 +1,125 @@
+unit Model.Pessoa;
+
+interface
+
+uses
+  Model.Interfaces;
+
+type
+
+  TModelPessoa = class(TInterfacedObject, iPessoa)
+  private
+    FID : Integer;
+    FNatureza : Integer;
+    FDocumento : string;
+    FPrimeiro : String;
+    FSegundo : String;
+    FDtRegistro : TDateTime;
+
+  public
+    constructor Create;
+    destructor Destroy; override;
+    class function New : iPessoa;
+
+    function ID (Value: Integer) : iPessoa; overload;
+    Function ID : Integer; overload;
+    function NATUREZA (Value: Integer) : iPessoa; overload;
+    Function NATUREZA : Integer; overload;
+    function DOCUMENTO (Value: string) : iPessoa; overload;
+    Function DOCUMENTO : string; overload;
+    Function NMPRIMEIRO (Value: string) : iPessoa; overload;
+    Function NMPRIMEIRO : string; overload;
+    Function NMSEGUNDO (Value: string) : iPessoa; overload;
+    Function NMSEGUNDO : string; overload;
+    Function DTREGISTRO (Value: TDateTime) : iPessoa; overload;
+    Function DTREGISTRO : TDateTime; overload;
+
+  end;
+
+implementation
+
+{ TModelPessoa }
+
+constructor TModelPessoa.Create;
+begin
+
+end;
+
+destructor TModelPessoa.Destroy;
+begin
+
+  inherited;
+end;
+
+function TModelPessoa.DOCUMENTO: string;
+begin
+  Result := FDocumento;
+end;
+
+function TModelPessoa.DOCUMENTO(Value: string): iPessoa;
+begin
+  Result := Self;
+  FDocumento := Value;
+end;
+
+function TModelPessoa.DTREGISTRO: TDateTime;
+begin
+  Result := FDtRegistro;
+end;
+
+function TModelPessoa.DTREGISTRO(Value: TDateTime): iPessoa;
+begin
+  Result := Self;
+  FDtRegistro := Value;
+end;
+
+function TModelPessoa.ID: Integer;
+begin
+  Result := FID;
+end;
+
+function TModelPessoa.ID(Value: Integer): iPessoa;
+begin
+  Result := Self;
+  FID := Value;
+end;
+
+function TModelPessoa.NATUREZA: Integer;
+begin
+  Result := FNatureza;
+end;
+
+function TModelPessoa.NATUREZA(Value: Integer): iPessoa;
+begin
+  Result := Self;
+  FNatureza := Value;
+end;
+
+class function TModelPessoa.New: iPessoa;
+begin
+  Result := Self.Create;
+end;
+
+function TModelPessoa.NMPRIMEIRO(Value: string): iPessoa;
+begin
+  Result := Self;
+  FPrimeiro := Value;
+end;
+
+function TModelPessoa.NMPRIMEIRO: string;
+begin
+  Result := FPrimeiro;
+end;
+
+function TModelPessoa.NMSEGUNDO(Value: string): iPessoa;
+begin
+  Result := Self;
+  FSegundo := Value;
+end;
+
+function TModelPessoa.NMSEGUNDO: string;
+begin
+  Result := FSegundo;
+end;
+
+end.

@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2022/09/16 18:02:27.000.200,=C:\Users\Alan Fagner\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2022/09/16 18:03:14.000.667,C:\WK\Cliente\src\View\uPrincipal.dfm=C:\Users\Alan Fagner\Documents\Embarcadero\Studio\Projects\Unit1.dfm</Transaction>
+    <Transaction>2022/09/16 18:03:14.000.667,C:\WK\Cliente\src\View\uPrincipal.pas=C:\Users\Alan Fagner\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2022/09/16 18:03:25.000.666,C:\WK\Cliente\src\Cliente.dproj=C:\Users\Alan Fagner\Documents\Embarcadero\Studio\Projects\Project1.dproj</Transaction>
+    <Transaction>2022/09/16 18:24:16.000.264,=C:\WK\Cliente\src\Unit1.pas</Transaction>
+    <Transaction>2022/09/16 18:24:51.000.371,C:\WK\Cliente\src\Unit1.pas=C:\WK\Cliente\src\View\uPessoa.pas</Transaction>
+    <Transaction>2022/09/16 18:24:51.000.371,C:\WK\Cliente\src\Unit1.dfm=C:\WK\Cliente\src\View\uPessoa.dfm</Transaction>
+    <Transaction>2022/09/16 19:13:41.000.423,=C:\WK\Cliente\src\Unit1.pas</Transaction>
+    <Transaction>2022/09/16 19:13:52.000.408,C:\WK\Cliente\src\Model\uDM.pas=C:\WK\Cliente\src\Unit1.pas</Transaction>
+    <Transaction>2022/09/16 19:13:52.000.408,C:\WK\Cliente\src\Model\uDM.dfm=C:\WK\Cliente\src\Unit1.dfm</Transaction>
+    <Transaction>2022/09/17 08:14:14.000.885,C:\WK\Cliente\src\Model\uDM.pas=</Transaction>
+    <Transaction>2022/09/17 08:16:40.000.430,=C:\WK\Cliente\src\Unit1.pas</Transaction>
+    <Transaction>2022/09/17 08:16:55.000.775,C:\WK\Cliente\src\Unit1.pas=C:\WK\Cliente\src\Model\Model.Interfaces.pas</Transaction>
+    <Transaction>2022/09/17 08:18:34.000.528,=C:\WK\Cliente\src\Unit1.pas</Transaction>
+    <Transaction>2022/09/17 08:26:05.000.299,C:\WK\Cliente\src\Unit1.pas=C:\WK\Cliente\src\Model\Model.Pessoa.pas</Transaction>
+    <Transaction>2022/09/17 08:48:07.000.791,=C:\WK\Cliente\src\Unit1.pas</Transaction>
+    <Transaction>2022/09/17 08:48:30.000.685,C:\WK\Cliente\src\Unit1.pas=C:\WK\Cliente\src\Controller\Controller.Interfaces.pas</Transaction>
+    <Transaction>2022/09/17 08:49:33.000.324,=C:\WK\Cliente\src\Unit1.pas</Transaction>
+    <Transaction>2022/09/17 08:52:23.000.719,C:\WK\Cliente\src\Unit1.pas=C:\WK\Cliente\src\Controller\uController.pas</Transaction>
+    <Transaction>2022/09/17 08:52:42.000.971,C:\WK\Cliente\src\Controller\Controller.Interfaces.pas=C:\WK\Cliente\src\Controller\uController.Interfaces.pas</Transaction>
+    <Transaction>2022/09/17 08:54:32.000.585,C:\WK\Cliente\src\Model\Model.Interfaces.pas=C:\WK\Cliente\src\Model\uModel.Interfaces.pas</Transaction>
+    <Transaction>2022/09/17 08:55:57.000.879,C:\WK\Cliente\src\Model\Model.Pessoa.pas=C:\WK\Cliente\src\Model\uModel.Pessoa.pas</Transaction>
+    <Transaction>2022/09/17 16:25:57.000.145,C:\WK\Cliente\src\Cliente.dproj=C:\WK\Cliente\src\Cliente.dproj</Transaction>
+    <Transaction>2022/09/19 12:58:19.000.314,=C:\Rest\Cliente\src\Unit1.pas</Transaction>
+    <Transaction>2022/09/19 12:58:37.000.051,C:\Rest\Cliente\src\View\uEnviar.dfm=C:\Rest\Cliente\src\Unit1.dfm</Transaction>
+    <Transaction>2022/09/19 12:58:37.000.051,C:\Rest\Cliente\src\View\uEnviar.pas=C:\Rest\Cliente\src\Unit1.pas</Transaction>
+    <Transaction>2022/09/20 10:12:21.000.344,=C:\Rest\Cliente\src\Unit1.pas</Transaction>
+    <Transaction>2022/09/20 10:13:35.000.113,C:\Rest\Cliente\src\Util\UEnviarThread.pas=C:\Rest\Cliente\src\Unit1.pas</Transaction>
+  </Transactions>
+</BorlandProject>

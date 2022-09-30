@@ -1,0 +1,136 @@
+unit uThreadUpdate;
+
+interface
+
+uses
+  System.Classes,
+  System.JSON,
+  uCEP,
+  uDM;
+
+type
+
+  TThUpdate = class(TThread)
+  private
+    vCEP  : TCEP;
+    Dados : TDM;
+    ID    : Integer;
+
+    FID         : integer;
+    FNatureza   : integer;
+    FDocumento  : string;
+    FNmPrimeiro : string;
+    FNmSegundo  : string;
+    FDtRegistro : TDateTime;
+    FCep        : string;
+
+  public
+    constructor Create(Pessoa: TJSONObject);
+    destructor Destroy; override;
+    procedure Execute; override;
+  end;
+
+implementation
+
+uses
+  System.SysUtils;
+
+{ TThUpdate }
+
+constructor TThUpdate.Create(Pessoa: TJSONObject);
+begin
+  inherited Create(False);
+  FreeOnTerminate := True;
+  Dados := TDM.Create(nil);
+  vCEP := TCEP.Create.Consulta(Pessoa.GetValue('CEP').Value);
+
+  FID         := StrToInt(Pessoa.GetValue('NATUREZA').Value);
+  FNatureza   := StrToInt(Pessoa.GetValue('NATUREZA').Value);
+  FDocumento  := Pessoa.GetValue('DOCUMENTO').Value;
+  FNmPrimeiro := Pessoa.GetValue('NMPRIMEIRO').Value;
+  FNmSegundo  := Pessoa.GetValue('NMSEGUNDO').Value;
+  FDtRegistro := StrToDate(Pessoa.GetValue('DTREGISTRO').Value);
+  FCep        := Pessoa.GetValue('CEP').Value;
+end;
+
+destructor TThUpdate.Destroy;
+begin
+  FreeAndNil(vCEP);
+  FreeAndNil(Dados);
+  inherited;
+end;
+
+procedure TThUpdate.Execute;
+begin
+  Dados.Conexao.StartTransaction;
+  try
+    try
+       Dados.Qry.SQL.Clear;
+       Dados.Qry.SQL.Add( 'UPDATE public.pessoa SET '+
+                          'flnatureza   = :flnatureza, '+
+                          'dsdocumento  = :dsdocumento, '+
+                          'nmprimeiro   = :nmprimeiro, '+
+                          'nmsegundo    = :nmsegundo, '+
+                          'dtregistro   = :dtregistro '+
+                          'WHERE idpessoa = :idpessoa');
+
+      Dados.Qry.ParamByName('idpessoa').AsInteger       := FID;
+      Dados.Qry.ParamByName('flnatureza').AsInteger     := FNatureza;
+      Dados.Qry.ParamByName('dsdocumento').AsString     := FDocumento;
+      Dados.Qry.ParamByName('nmprimeiro').AsString      := FNmPrimeiro;
+      Dados.Qry.ParamByName('nmsegundo').AsString       := FNmSegundo;
+      Dados.Qry.ParamByName('dtregistro').AsDateTime    := FDtRegistro;
+      Dados.Qry.ExecSQL;
+
+      Dados.Conexao.StartTransaction;
+      try
+        Dados.Qry.SQL.Clear;
+        Dados.Qry.SQL.Add('UPDATE public.endereco SET dscep = :dscep WHERE idpessoa = :idpessoa RETURNING idendereco');
+        Dados.Qry.ParamByName('idpessoa').AsInteger := FID;
+        Dados.Qry.ParamByName('dscep').AsString     := FCep;
+        Dados.Qry.Open;
+
+        ID := Dados.Qry.Fields[0].Value;
+
+        Dados.Conexao.Commit;
+      except on E: Exception do
+        Dados.Conexao.Rollback;
+      end;
+
+      Dados.Conexao.StartTransaction;
+      try
+        Dados.Qry.SQL.Clear;
+        Dados.Qry.SQL.Add(  'UPDATE public.endereco_integracao SET '+
+                            'dsuf             = :dsuf, '+
+                            'nmcidade         = :nmcidade, '+
+                            'nmbairro         = :nmbairro, '+
+                            'nmlogradouro     = :nmlogradouro, '+
+                            'dscomplemento    = :dscomplemento '+
+                            'WHERE idendereco = :idendereco');
+
+        Dados.Qry.ParamByName('idendereco').AsInteger     := ID;
+        Dados.Qry.ParamByName('dsuf').AsString            := vCEP.UF;
+        Dados.Qry.ParamByName('nmcidade').AsString        := vCEP.LOCALIDADE;
+        Dados.Qry.ParamByName('nmbairro').AsString        := vCEP.BAIRRO;
+        Dados.Qry.ParamByName('nmlogradouro').AsString    := vCEP.LOGRADOURO;
+        Dados.Qry.ParamByName('dscomplemento').AsString   := vCEP.COMPLEMENTO;
+        Dados.Qry.ExecSQL;
+
+        Dados.Conexao.Commit;
+      except on E: Exception do
+        Dados.Conexao.Rollback;
+      end;
+
+      Dados.Conexao.Commit;
+
+      except on E: Exception do begin
+        Dados.Conexao.Rollback;
+      end;
+    end;
+
+  finally
+    FreeAndNil(vCEP);
+  end;
+end;
+
+end.

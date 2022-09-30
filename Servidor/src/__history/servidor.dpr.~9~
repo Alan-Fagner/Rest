@@ -1,0 +1,27 @@
+program servidor;
+{$APPTYPE GUI}
+
+uses
+  Vcl.Forms,
+  Web.WebReq,
+  IdHTTPWebBrokerBridge,
+  uPrincipal in 'View\uPrincipal.pas' {Form1},
+  uSM in 'uSM.pas',
+  uWM in 'uWM.pas' {WM: TWebModule},
+  uModel.Interfaces in 'Model\uModel.Interfaces.pas',
+  uModel.Pessoa in 'Model\uModel.Pessoa.pas',
+  uController.Interfaces in 'Controller\uController.Interfaces.pas',
+  uController in 'Controller\uController.pas',
+  uDM in 'Model\uDM.pas' {DM: TDataModule},
+  uCEP in 'Util\uCEP.pas';
+
+{$R *.res}
+
+begin
+  if WebRequestHandler <> nil then
+    WebRequestHandler.WebModuleClass := WebModuleClass;
+  Application.Initialize;
+  ReportMemoryLeaksOnShutdown := True;
+  Application.CreateForm(TForm1, Form1);
+  Application.Run;
+end.

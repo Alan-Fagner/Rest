@@ -1,0 +1,256 @@
+object FrmPessoa: TFrmPessoa
+  Left = 0
+  Top = 0
+  BorderIcons = [biSystemMenu]
+  BorderStyle = bsSingle
+  Caption = 'Pessoa'
+  ClientHeight = 600
+  ClientWidth = 600
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
+  Position = poScreenCenter
+  OnCreate = FormCreate
+  TextHeight = 15
+  object PC: TPageControl
+    Left = 0
+    Top = 0
+    Width = 600
+    Height = 600
+    ActivePage = TSLista
+    Align = alClient
+    TabOrder = 0
+    ExplicitWidth = 596
+    ExplicitHeight = 599
+    object TSLista: TTabSheet
+      Caption = 'Lista'
+      TabVisible = False
+      object PnMenu: TPanel
+        AlignWithMargins = True
+        Left = 3
+        Top = 552
+        Width = 586
+        Height = 35
+        Align = alBottom
+        BevelKind = bkFlat
+        BevelOuter = bvNone
+        Caption = 'PnMenu'
+        ShowCaption = False
+        TabOrder = 0
+        object BtnAdicionar: TBitBtn
+          AlignWithMargins = True
+          Left = 207
+          Top = 3
+          Width = 120
+          Height = 25
+          Align = alRight
+          Caption = 'Adicionar'
+          TabOrder = 0
+          OnClick = BtnAdicionarClick
+        end
+        object BtnExcluir: TBitBtn
+          AlignWithMargins = True
+          Left = 333
+          Top = 3
+          Width = 120
+          Height = 25
+          Align = alRight
+          Caption = 'Excluir'
+          TabOrder = 1
+        end
+        object BtnFechar: TBitBtn
+          AlignWithMargins = True
+          Left = 459
+          Top = 3
+          Width = 120
+          Height = 25
+          Align = alRight
+          Caption = 'Fechar'
+          NumGlyphs = 2
+          TabOrder = 2
+          OnClick = BtnFecharClick
+        end
+      end
+      object PnDados: TPanel
+        Left = 0
+        Top = 0
+        Width = 592
+        Height = 549
+        Align = alClient
+        BevelOuter = bvNone
+        Caption = 'PnDados'
+        ShowCaption = False
+        TabOrder = 1
+        object GBPesquisar: TGroupBox
+          AlignWithMargins = True
+          Left = 3
+          Top = 3
+          Width = 586
+          Height = 48
+          Align = alTop
+          Caption = 'Pesquisar'
+          TabOrder = 0
+          object EdtPesquisar: TEdit
+            AlignWithMargins = True
+            Left = 5
+            Top = 20
+            Width = 576
+            Height = 23
+            Align = alClient
+            TabOrder = 0
+            TextHint = 'Digite o nome'
+          end
+        end
+        object LV: TListView
+          AlignWithMargins = True
+          Left = 3
+          Top = 57
+          Width = 586
+          Height = 489
+          Align = alClient
+          Columns = <
+            item
+              Caption = 'ID'
+            end
+            item
+              AutoSize = True
+              Caption = 'Nome'
+            end
+            item
+              AutoSize = True
+              Caption = 'Sobrenome'
+            end>
+          GridLines = True
+          ReadOnly = True
+          RowSelect = True
+          TabOrder = 1
+          ViewStyle = vsReport
+          OnDblClick = LVDblClick
+        end
+      end
+    end
+    object TSDados: TTabSheet
+      Caption = 'Dados'
+      ImageIndex = 1
+      TabVisible = False
+      object LblNome: TLabel
+        Left = 3
+        Top = 5
+        Width = 33
+        Height = 15
+        Caption = 'Nome'
+      end
+      object LblSobrenome: TLabel
+        Left = 301
+        Top = 5
+        Width = 61
+        Height = 15
+        Caption = 'Sobrenome'
+      end
+      object LblNatureza: TLabel
+        Left = 3
+        Top = 58
+        Width = 47
+        Height = 15
+        Caption = 'Natureza'
+      end
+      object LblDocumento: TLabel
+        Left = 301
+        Top = 58
+        Width = 63
+        Height = 15
+        Caption = 'Documento'
+      end
+      object Label1: TLabel
+        Left = 3
+        Top = 116
+        Width = 90
+        Height = 15
+        Caption = 'Data de Cadastro'
+      end
+      object EdtNome: TEdit
+        Left = 3
+        Top = 25
+        Width = 288
+        Height = 23
+        TabOrder = 0
+      end
+      object EdtSobrenome: TEdit
+        Left = 301
+        Top = 25
+        Width = 288
+        Height = 23
+        TabOrder = 1
+      end
+      object EdtDocumento: TEdit
+        Left = 301
+        Top = 79
+        Width = 288
+        Height = 23
+        TabOrder = 2
+      end
+      object EdtNatureza: TEdit
+        Left = 3
+        Top = 78
+        Width = 288
+        Height = 23
+        TabOrder = 3
+      end
+      object Panel1: TPanel
+        AlignWithMargins = True
+        Left = 3
+        Top = 552
+        Width = 586
+        Height = 35
+        Align = alBottom
+        BevelKind = bkFlat
+        BevelOuter = bvNone
+        Caption = 'Panel1'
+        ShowCaption = False
+        TabOrder = 4
+        ExplicitTop = 551
+        ExplicitWidth = 582
+        object BtnCancelar: TBitBtn
+          AlignWithMargins = True
+          Left = 459
+          Top = 3
+          Width = 120
+          Height = 25
+          Align = alRight
+          Caption = 'Cancelar'
+          Kind = bkCancel
+          NumGlyphs = 2
+          TabOrder = 0
+          OnClick = BtnCancelarClick
+          ExplicitLeft = 455
+        end
+        object BtnSalvar: TBitBtn
+          AlignWithMargins = True
+          Left = 333
+          Top = 3
+          Width = 120
+          Height = 25
+          Align = alRight
+          Kind = bkOK
+          NumGlyphs = 2
+          TabOrder = 1
+          OnClick = BtnSalvarClick
+          ExplicitLeft = 329
+        end
+      end
+      object DTP: TDateTimePicker
+        Left = 3
+        Top = 137
+        Width = 288
+        Height = 23
+        Date = 44821.000000000000000000
+        Time = 0.528839386577601500
+        DateFormat = dfLong
+        TabOrder = 5
+      end
+    end
+  end
+end
