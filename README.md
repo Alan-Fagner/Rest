@@ -33,4 +33,5 @@ Após realizar o cadastramento de lote de uma grande quantidade pessoas, pode se
 
 ## Construído com
 Delphi 10.3.3
+
 Banco de dados: postgresql
