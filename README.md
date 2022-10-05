@@ -1,6 +1,6 @@
 # Projeto Rest
 
-Este projeto foi criado para apresentar as habilidades no desenvolvimento uma aplicação datasnap. Utilizando Clean Code, POO, Padrôes de Projeto, Programação Funcional, Threads, Controle de transações, e integração com a API ViaCEP. 
+Este projeto foi criado para apresentar as habilidades no desenvolvimento uma aplicação datasnap. Utilizando Clean Code, POO, Padrões de Projeto, Programação Funcional, Threads, Controle de transações, e integração com a API ViaCEP. 
 
 ## Descrição
 
